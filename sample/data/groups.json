@@ -1,10 +1,10 @@
 {
-  "cloudops-admin": {
+  "sopp-prod-grp-cloudops-admin": {
     "environment": "prod",
     "description": "Grupo de administradores CloudOps",
     "assignments": [
       {
-        "permission_set": "cloudops-admin",
+        "permission_set": "sopp-prod-ps-cloudops-admin",
         "accounts": ["000000000000"]
       }
     ]

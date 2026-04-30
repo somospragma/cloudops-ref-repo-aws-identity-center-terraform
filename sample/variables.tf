@@ -34,5 +34,5 @@ variable "common_tags" {
 
 variable "profile" {
   description = "Profile AWS"
-  default = {}
+  default     = {}
 }

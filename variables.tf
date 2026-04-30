@@ -25,23 +25,12 @@ variable "project" {
 }
 
 variable "environment" {
-  description = "Ambiente por defecto (usado para tags). Los recursos usan su propio environment."
+  description = "Ambiente por defecto (usado para tags)."
   type        = string
 
   validation {
     condition     = contains(["dev", "qa", "prod", "pdn", "stg", "uat"], var.environment)
     error_message = "El ambiente debe ser uno de: dev, qa, prod, pdn, stg, uat."
-  }
-}
-
-variable "allowed_environments" {
-  description = "Lista de ambientes permitidos para PS y grupos."
-  type        = list(string)
-  default     = ["dev", "qa", "prod", "pdn", "stg", "uat"]
-
-  validation {
-    condition     = length(var.allowed_environments) > 0
-    error_message = "Debe haber al menos un ambiente permitido."
   }
 }
 
@@ -51,9 +40,8 @@ variable "allowed_environments" {
 
 variable "permission_sets" {
   description = <<-EOT
-    Mapa de Permission Sets a crear. Cada key es el identificador único del PS.
+    Mapa de Permission Sets a crear. La key es el nombre completo del PS.
     Estructura:
-    - environment: Ambiente del PS (dev, qa, prod, stg, uat, all) - OBLIGATORIO
     - description: Descripción del permission set
     - session_duration: Duración de la sesión (formato ISO 8601, ej: PT4H)
     - managed_policies: Lista de ARNs de políticas AWS managed
@@ -63,7 +51,6 @@ variable "permission_sets" {
     - tags: Tags adicionales para el permission set
   EOT
   type = map(object({
-    environment      = string
     description      = string
     session_duration = optional(string, "PT1H")
     managed_policies = optional(list(string), [])
@@ -92,16 +79,14 @@ variable "permission_sets" {
 
 variable "groups" {
   description = <<-EOT
-    Mapa de grupos a crear en Identity Store. Cada key es el identificador único del grupo.
+    Mapa de grupos a crear en Identity Store. La key es el nombre completo del grupo.
     Estructura:
-    - environment: Ambiente del grupo (dev, qa, prod, stg, uat, all) - OBLIGATORIO
     - description: Descripción del grupo
     - assignments: Lista de asignaciones de permission sets a cuentas
       - permission_set: Key del permission set (debe existir en permission_sets)
       - accounts: Lista de IDs de cuentas AWS (12 dígitos)
   EOT
   type = map(object({
-    environment = string
     description = string
     assignments = optional(list(object({
       permission_set = string

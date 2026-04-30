@@ -1,5 +1,5 @@
 {
-  "cloudops-admin": {
+  "sopp-prod-ps-cloudops-admin": {
     "environment": "prod",
     "description": "Acceso de administrador para CloudOps",
     "session_duration": "PT8H",
