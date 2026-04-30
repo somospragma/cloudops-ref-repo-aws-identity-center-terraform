@@ -1,0 +1,12 @@
+{
+  "cloudops-admin": {
+    "environment": "prod",
+    "description": "Grupo de administradores CloudOps",
+    "assignments": [
+      {
+        "permission_set": "cloudops-admin",
+        "accounts": ["000000000000"]
+      }
+    ]
+  }
+}
