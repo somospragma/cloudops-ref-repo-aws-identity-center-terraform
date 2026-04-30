@@ -1,6 +1,5 @@
 {
   "sopp-prod-grp-cloudops-admin": {
-    "environment": "prod",
     "description": "Grupo de administradores CloudOps",
     "assignments": [
       {

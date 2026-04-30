@@ -15,10 +15,10 @@ locals {
 
   #############################################################################
   # Permission Sets - Transformación (PC-IAC-009, PC-IAC-026)
+  # La key del JSON es el nombre completo del Permission Set
   #############################################################################
   permission_sets_transformed = {
     for key, config in local.permission_sets_raw : key => {
-      environment               = config.environment
       description               = config.description
       session_duration          = try(config.session_duration, "PT1H")
       managed_policies          = try(config.managed_policies, [])
@@ -34,10 +34,10 @@ locals {
 
   #############################################################################
   # Groups - Transformación (PC-IAC-026)
+  # La key del JSON es el nombre completo del grupo
   #############################################################################
   groups_transformed = {
     for key, config in local.groups_raw : key => {
-      environment = config.environment
       description = config.description
       assignments = try(config.assignments, [])
     }
