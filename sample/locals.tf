@@ -24,7 +24,7 @@ locals {
       managed_policies          = try(config.managed_policies, [])
       customer_managed_policies = try(config.customer_managed_policies, [])
       relay_state               = try(config.relay_state, null)
-      tags                      = try(config.tags, {})
+      additional_tags           = try(config.additional_tags, {})
       permissions_boundary      = try(config.permissions_boundary, null)
 
       # Cargar inline policy desde archivo si se especifica

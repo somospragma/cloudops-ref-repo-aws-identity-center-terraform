@@ -48,7 +48,7 @@ variable "permission_sets" {
     - customer_managed_policies: Lista de políticas customer managed (name, path)
     - inline_policy: Política inline en formato JSON string (opcional)
     - permissions_boundary: ARN de la política de boundary (opcional)
-    - tags: Tags adicionales para el permission set
+    - additional_tags: Tags adicionales para el permission set
   EOT
   type = map(object({
     description      = string
@@ -61,7 +61,7 @@ variable "permission_sets" {
     inline_policy        = optional(string, null)
     permissions_boundary = optional(string, null)
     relay_state          = optional(string, null)
-    tags                 = optional(map(string), {})
+    additional_tags      = optional(map(string), {})
   }))
   default = {}
 
