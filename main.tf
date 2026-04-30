@@ -17,21 +17,11 @@ resource "aws_ssoadmin_permission_set" "this" {
 
   tags = merge(
     { Name = each.value.name },
-    each.value.tags
+    each.value.additional_tags
   )
 
-  # Validación: PS referenciados en grupos deben existir (PC-IAC-002)
+  # Validación: PS referenciados en grupos y usuarios deben existir (PC-IAC-002)
   lifecycle {
-    precondition {
-      condition     = length(local.invalid_ps_environments) == 0
-      error_message = <<-EOT
-        Error de validación: Los siguientes Permission Sets tienen environments no permitidos:
-        ${join("\n", [for item in local.invalid_ps_environments : "  - PS '${item.key}' tiene environment '${item.environment}' no permitido"])}
-        
-        Environments permitidos: ${join(", ", var.allowed_environments)}
-      EOT
-    }
-
     precondition {
       condition     = length(local.invalid_group_ps) == 0
       error_message = <<-EOT
@@ -126,16 +116,6 @@ resource "aws_identitystore_group" "this" {
 
   # Validación: Grupos referenciados en usuarios deben existir (PC-IAC-002)
   lifecycle {
-    precondition {
-      condition     = length(local.invalid_group_environments) == 0
-      error_message = <<-EOT
-        Error de validación: Los siguientes grupos tienen environments no permitidos:
-        ${join("\n", [for item in local.invalid_group_environments : "  - Grupo '${item.key}' tiene environment '${item.environment}' no permitido"])}
-        
-        Environments permitidos: ${join(", ", var.allowed_environments)}
-      EOT
-    }
-
     precondition {
       condition     = length(local.invalid_user_groups) == 0
       error_message = <<-EOT

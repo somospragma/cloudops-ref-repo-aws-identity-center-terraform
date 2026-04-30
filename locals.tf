@@ -45,30 +45,12 @@ locals {
   ])
 
   #############################################################################
-  # Validación de environments permitidos (PC-IAC-002)
-  #############################################################################
-
-  invalid_ps_environments = [
-    for k, v in var.permission_sets : {
-      key         = k
-      environment = v.environment
-    } if !contains(var.allowed_environments, v.environment)
-  ]
-
-  invalid_group_environments = [
-    for k, v in var.groups : {
-      key         = k
-      environment = v.environment
-    } if !contains(var.allowed_environments, v.environment)
-  ]
-
-  #############################################################################
-  # Permission Sets - Construcción de nombres (PC-IAC-003, PC-IAC-012)
-  # Nomenclatura: {project}-{environment}-ps-{key}
+  # Permission Sets - Configuración (PC-IAC-003, PC-IAC-012)
+  # La key del JSON es el nombre completo del Permission Set
   #############################################################################
   permission_sets_config = {
     for key, config in var.permission_sets : key => merge(config, {
-      name = "${var.project}-${config.environment}-ps-${key}"
+      name = key
     })
   }
 
@@ -104,12 +86,12 @@ locals {
   }
 
   #############################################################################
-  # Groups - Construcción de nombres (PC-IAC-003, PC-IAC-012)
-  # Nomenclatura: {project}-{environment}-grp-{key}
+  # Groups - Configuración (PC-IAC-003, PC-IAC-012)
+  # La key del JSON es el nombre completo del grupo
   #############################################################################
   groups_config = {
     for key, config in var.groups : key => merge(config, {
-      display_name = "${var.project}-${config.environment}-grp-${key}"
+      display_name = key
     })
   }
 

@@ -11,7 +11,7 @@ Módulo de Terraform para la gobernanza de AWS IAM Identity Center (SSO). Permit
 - ✅ Membresías de usuarios a grupos
 - ✅ Asignaciones directas de usuarios a cuentas (opcional)
 - ✅ Tags personalizados en todos los recursos
-- ✅ Nomenclatura estándar automática
+- ✅ Nombres explícitos (la key del JSON es el nombre completo)
 
 ## Uso
 
@@ -52,9 +52,11 @@ module "iam_identity_center" {
 
 ### Estructura de `permission_sets`
 
+La key del mapa es el nombre completo del Permission Set (máximo 32 caracteres).
+
 ```hcl
 permission_sets = {
-  "admin" = {
+  "sopp-prod-ps-admin" = {
     description      = "Acceso de administrador"
     session_duration = "PT4H"
     managed_policies = ["arn:aws:iam::aws:policy/AdministratorAccess"]
@@ -70,13 +72,15 @@ permission_sets = {
 
 ### Estructura de `groups`
 
+La key del mapa es el nombre completo del grupo (máximo 50 caracteres).
+
 ```hcl
 groups = {
-  "admins" = {
+  "sopp-prod-grp-admins" = {
     description = "Grupo de administradores"
     assignments = [
       {
-        permission_set = "admin"  # Key del PS
+        permission_set = "sopp-prod-ps-admin"  # Key del PS (nombre completo)
         accounts       = ["111111111111", "222222222222"]
       }
     ]
@@ -92,10 +96,10 @@ users = {
     given_name   = "Juan"
     family_name  = "Perez"
     email        = "juan.perez@empresa.com"
-    groups       = ["admins", "developers"]
+    groups       = ["sopp-prod-grp-admins", "sopp-prod-grp-developers"]
     direct_assignments = [  # Opcional
       {
-        permission_set = "readonly"
+        permission_set = "sopp-prod-ps-readonly"
         accounts       = ["333333333333"]
       }
     ]
@@ -131,7 +135,7 @@ users = {
 |-------|-------------|----------------|
 | PC-IAC-001 | Estructura de módulo | ✅ 10 archivos raíz + 8 sample/ |
 | PC-IAC-002 | Variables con validación | ✅ map(object) con validaciones |
-| PC-IAC-003 | Nomenclatura estándar | ✅ `{client}-{project}-{env}-{type}-{key}` |
+| PC-IAC-003 | Nomenclatura estándar | ✅ Nombres explícitos en keys |
 | PC-IAC-005 | Provider alias | ✅ `aws.project` obligatorio |
 | PC-IAC-007 | Outputs granulares | ✅ Solo IDs y ARNs |
 | PC-IAC-010 | for_each obligatorio | ✅ En todos los recursos |
@@ -148,10 +152,15 @@ Se recomienda usar archivos JSON separados para permission_sets, groups y users 
 - Menos conflictos en PRs
 - Mayor claridad y mantenibilidad
 
-### Nomenclatura Automática
-El módulo construye automáticamente los nombres siguiendo el patrón:
-- Permission Sets: `{client}-{project}-{env}-ps-{key}`
-- Groups: `{client}-{project}-{env}-group-{key}`
+### Nomenclatura Explícita
+El módulo usa nombres explícitos donde la key del JSON es el nombre completo del recurso:
+- Permission Sets: La key es el nombre (ej: `sopp-prod-ps-admin`)
+- Groups: La key es el display_name (ej: `sopp-prod-grp-admins`)
+
+Esto permite:
+- Evitar conflictos entre ambientes (dev, prod) en el mismo módulo
+- Mayor control sobre los nombres exactos
+- Flexibilidad en la nomenclatura según las necesidades del proyecto
 
 ### Asignaciones Directas de Usuarios
 Aunque se soportan asignaciones directas de usuarios a cuentas, se recomienda usar grupos para:
