@@ -17,7 +17,7 @@ resource "aws_ssoadmin_permission_set" "this" {
 
   tags = merge(
     { Name = each.value.name },
-    each.value.tags
+    each.value.additional_tags
   )
 
   # Validación: PS referenciados en grupos y usuarios deben existir (PC-IAC-002)
